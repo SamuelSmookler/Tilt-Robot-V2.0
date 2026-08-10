@@ -1,0 +1,35 @@
+# Station settings. Re-read at the start of every run -- edit and press RUN.
+# Bad values revert to the default and print a warning at startup.
+
+[ports]
+stage_port = "COM7"      # Arduino motion controller
+dut_port   = "COM6"      # Teensy sensor hub
+dut_slot   = 0           # 0..7
+
+[poses]
+inner_limit_deg  = 120.0         # max |INNER|; hardware window is +/-145
+outer_window_deg = [0.0, 360.0]  # OUTER device window, used to price real slew
+order = "optimized"              # "optimized" = shortest travel | "designed"
+
+[campaign]
+default_model      = "BodegaR21"  # Affine12 | Bodega24 | BodegaR21
+auto_level_default = true
+settle_s           = 1.0         # ring-down wait at each pose
+n_samples          = 25          # averaged per pose
+simultaneous_moves = true        # MOVEB drives both axes at once
+
+[motion]
+timeout_s         = 120          # mechanical timeout; a homing search is the slowest
+parking_angle_deg = 30           # park here so the NEG home search starts clean
+
+[leveling]
+# Uncomment to override the constants in leveling.py.
+# tolerance_deg = 0.002
+# coarse_tol_g  = 0.0022
+
+[repeatability]
+runs = 6                 # campaigns the REPEATABILITY button runs
+
+[output]
+runs_dir = "runs"
+verbose  = false         # log every serial line to runs/debug_*.log
