@@ -54,28 +54,29 @@ def solve_axes(fit_angles, fit_meas, model_cls=Affine12, start_skew=-0.84,
     An axis direction has 2 DOF, so 4 for two axes -- but only 2 are
     observable. Tipping outer toward y, or inner toward x, mimics a constant
     DUT rotation, which the affine M absorbs for free; fitting them makes
-    them wander +/-0.24 deg between restarts with no accuracy gain. The two
-    z-tips change the shape of the swept sphere and are pinned by the data.
+    them wander +/-0.24 deg between restarts with no accuracy gain. The outer 
+    tipping toward z and the inner tipping toward x change the shape of the 
+    swept sphere and are pinned by the data.
 
     Nelder-Mead is restarted until the cost stops improving: scipy steps a
     coordinate that starts at exactly 0.0 by only 0.00025, so a single pass
     can stall before reaching a tip near 1 deg (this cost us 2.19 vs 1.28 mg
     on 2026-08-07).
     """
-    def cost(z):
-        truth = truth_axes(fit_angles, (0.0, z[0], 0.0, z[1]))
+    def cost(tipping):
+        truth = truth_axes(fit_angles, (tipping[0], 0.0, tipping[1], 0.0))
         model = model_cls().fit(fit_meas, truth)
         return float(np.mean(np.abs(model.apply(fit_meas) - truth)))
 
-    z, prev = np.array([0.0, start_skew]), np.inf
+    tipping, prev = np.array([0.0, start_skew]), np.inf
     for _ in range(rounds):
-        res = minimize(cost, z, method="Nelder-Mead",
+        res = minimize(cost, tipping, method="Nelder-Mead",
                        options={"xatol": 1e-6, "fatol": 1e-11, "maxiter": 4000})
-        z = res.x
+        tipping = res.x
         if prev - res.fun < 1e-9:
             break
         prev = res.fun
-    return np.array([0.0, z[0], 0.0, z[1]])
+    return np.array([tipping[0], 0.0, tipping[1], 0.0])
 
 
 def  solve_skew(fit_angles, fit_meas, model_cls=Affine12, limit_deg=5.0):
