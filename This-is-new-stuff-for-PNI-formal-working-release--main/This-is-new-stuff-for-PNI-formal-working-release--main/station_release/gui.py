@@ -269,7 +269,7 @@ def worker(model_name, do_level=True, announce_done=True, out_paths=None):
 def repeat_worker(n, model_name, do_level):
     """repeats for repeatability and reliability test
     """
-    from ai_assisted import repeatability
+    from ai_assisted import repeatability               # we don't have this 
     paths = []
     for i in range(n):
         if stop_event.is_set():
