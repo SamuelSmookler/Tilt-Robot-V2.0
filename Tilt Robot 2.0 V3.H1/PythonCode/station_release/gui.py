@@ -263,12 +263,24 @@ def worker(model_name, do_level=True, fit_pose_count=None, announce_done=True,
         msgs.put(f"Z-axis RMSE : {per_axis_rmse[2]:.2f} mg")
         msgs.put(f"worst pose : {m['max_vector_mg']:.2f} mg")
         msgs.put(f"angular RMS : {m['rms_angular_deg']:.3f} deg")
-        axis_tips = r.get("axis_tips_deg")
-        if axis_tips is not None and len(axis_tips) >= 4:
-            msgs.put(f"outer-axis Y tip : {axis_tips["outer_y"]:+.3f} deg")
-            msgs.put(f"inner-axis X tip : {axis_tips["inner_x"]:+.3f} deg")
-        else:
-            msgs.put("axis tipping errors : unavailable")
+        
+      geometry = r.get("axis_geometry_deg")
+
+      if geometry is not None:
+        msgs.put(
+            f"X/Y axis non-orthogonality : "
+            f"{geometry['xy_nonorthogonality']:+.3f} deg"
+        )
+        msgs.put(
+            f"outer-axis Z tip : "
+            f"{geometry['outer_z_tip']:+.3f} deg"
+        )
+        msgs.put(
+            f"inner-axis Z tip : "
+            f"{geometry['inner_z_tip']:+.3f} deg"
+        )
+      else:
+        msgs.put("axis geometry : unavailable")
         
         verdict = "PASS" if r["corrected_error_mg"] < 25 else "FAIL"
         artifact = {
