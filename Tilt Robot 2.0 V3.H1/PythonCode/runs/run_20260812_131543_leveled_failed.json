@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-08-12T13:15:43.270131",
+  "campaign_status": "SYSTEM_FAIL",
+  "failure_kind": "system",
+  "failure_reason": "could not open port 'COM6': FileNotFoundError(2, 'The system cannot find the file specified.', None, 2)",
+  "model": "SQAC30",
+  "requested_fit_pose_count": 26,
+  "poses": [],
+  "leveling": {
+    "enabled": true
+  },
+  "acquisition_settings": {
+    "qualification_samples": 25,
+    "measurement_samples": 25,
+    "tp3_sd_threshold_mg": 3.0,
+    "timeout_s": 10.0,
+    "max_attempts": 3,
+    "sample_period_s": 0.03
+  }
+}
