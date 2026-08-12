@@ -73,7 +73,7 @@ def solve_axes(
         model = model_cls().fit(fit_meas, truth)
         return float(np.mean(np.abs(model.apply(fit_meas) - truth)))
 
-    z, prev = np.array([start_outer_y, start_inner_x]), np.inf
+    tipping, prev = np.array([start_outer_y, start_inner_x]), np.inf
     for _ in range(rounds):
         res = minimize(cost, tipping, method="Nelder-Mead",
                        options={"xatol": 1e-6, "fatol": 1e-11, "maxiter": 4000})
