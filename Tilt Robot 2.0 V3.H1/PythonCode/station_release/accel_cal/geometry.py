@@ -51,38 +51,78 @@ def solve_axes(
     fit_angles,
     fit_meas,
     model_cls=Affine12,
-    start_outer_y=0.0,
-    start_inner_x=0.0,
+    start_inner_z=-0.84,
     rounds=6,
 ):
-    """Solve the two IDENTIFIABLE axis-direction parameters.
+    """Fit the three observable rotary-axis geometry DOF.
 
-    An axis direction has 2 DOF, so 4 for two axes -- but only 2 are
-    observable. Tipping outer toward z, or inner toward z, mimics a constant
-    DUT rotation, which the affine M absorbs for free; fitting them makes
-    them wander +/-0.24 deg between restarts with no accuracy gain. The two
-    tips change the shape of the swept sphere and are pinned by the data.
+    Axis representation:
+        [outer_y, outer_z, inner_x, inner_z]
 
-    Nelder-Mead is restarted until the cost stops improving: scipy steps a
-    coordinate that starts at exactly 0.0 by only 0.00025, so a single pass
-    can stall before reaching a tip near 1 deg (this cost us 2.19 vs 1.28 mg
-    on 2026-08-07).
+    Gravity + an unrestricted affine correction cannot determine the
+    common yaw of the OUTER-X / INNER-Y axis pair about Z.
+
+    Gauge choice:
+        inner_x = 0
+
+    Therefore the three fitted parameters are:
+        p[0] = outer_y  -> relative X/Y-axis non-orthogonality in this gauge
+        p[1] = outer_z  -> OUTER axis out-of-plane tip
+        p[2] = inner_z  -> INNER axis out-of-plane tip
+
+    outer_y should not be interpreted as the absolute physical Y component
+    of the OUTER axis unless the chosen yaw gauge is physically established.
     """
-    def cost(tipping):
-        truth = truth_axes(fit_angles, (tipping[0], 0.0, tipping[1], 0.0))
-        model = model_cls().fit(fit_meas, truth)
-        return float(np.mean(np.abs(model.apply(fit_meas) - truth)))
 
-    tipping, prev = np.array([start_outer_y, start_inner_x]), np.inf
+    def cost(p):
+        tips = (
+            p[0],   # outer_y: relative in-plane misalignment
+            p[1],   # outer_z
+            0.0,    # inner_x: fixed yaw gauge
+            p[2],   # inner_z
+        )
+
+        truth = truth_axes(fit_angles, tips)
+        model = model_cls().fit(fit_meas, truth)
+
+        return float(
+            np.mean(np.abs(model.apply(fit_meas) - truth))
+        )
+
+    p = np.array([
+        0.0,             # relative XY misalignment
+        0.0,             # outer_z
+        start_inner_z,   # inner_z
+    ], dtype=float)
+
+    prev = np.inf
+
     for _ in range(rounds):
-        res = minimize(cost, tipping, method="Nelder-Mead",
-                       options={"xatol": 1e-6, "fatol": 1e-11, "maxiter": 4000})
-        tipping = res.x
+        res = minimize(
+            cost,
+            p,
+            method="Nelder-Mead",
+            options={
+                "xatol": 1e-6,
+                "fatol": 1e-11,
+                "maxiter": 4000,
+            },
+        )
+
+        p = res.x
+
         if prev - res.fun < 1e-9:
             break
-        prev = res.fun
-    return np.array([tipping[0], 0.0, tipping[1], 0.0])
 
+        prev = res.fun
+
+    # Full four-component representation expected by truth_axes().
+    return np.array([
+        p[0],   # outer_y
+        p[1],   # outer_z
+        0.0,    # inner_x -- gauge
+        p[2],   # inner_z
+    ])
 
 def  solve_skew(fit_angles, fit_meas, model_cls=Affine12, limit_deg=5.0):
 
