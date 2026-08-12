@@ -342,7 +342,14 @@ def calibrate(motion, sensor, fit_poses, verify_poses, model=None, abort=None,
         "corrected_error_mg": corrected_error,
         "skew_x_deg": skew_x_deg,
         "metrics": verification_metrics(corrected, a_true_verify),
-        "axis_tips_deg": None if tips is None else {
+        
+        "axis_geometry_deg": None if tips is None else {
+        "xy_nonorthogonality": float(tips[0]),
+        "outer_z_tip": float(tips[1]),
+        "inner_z_tip": float(tips[3]),
+        "yaw_gauge": "inner_x_zero",
+
+        "truth_axis_components": {
             "outer_y": float(tips[0]),
             "outer_z": float(tips[1]),
             "inner_x": float(tips[2]),
