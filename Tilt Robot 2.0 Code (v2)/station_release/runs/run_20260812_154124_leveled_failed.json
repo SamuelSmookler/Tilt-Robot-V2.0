@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-08-12T15:42:22.919003",
+  "campaign_status": "SYSTEM_FAIL",
+  "failure_kind": "system",
+  "failure_reason": "both 005 channels must be within +/-0.35 deg after rail recovery (x +0.1316, y +0.3502, recovered ['x'], live ['x', 'y'], dead [])",
+  "model": "SQAC30",
+  "requested_fit_pose_count": 26,
+  "poses": [],
+  "leveling": {
+    "enabled": true,
+    "stability_events": [],
+    "stability_settings": {
+      "window_samples": 10,
+      "stable_windows": 2,
+      "sd_threshold_deg": 0.001,
+      "drift_threshold_deg": 0.001,
+      "timeout_s": 20.0,
+      "sample_period_s": 0.1
+    }
+  },
+  "acquisition_settings": {
+    "qualification_samples": 25,
+    "measurement_samples": 25,
+    "tp3_sd_threshold_mg": 2.0,
+    "timeout_s": 10.0,
+    "max_attempts": 3,
+    "sample_period_s": 0.03
+  }
+}
