@@ -124,6 +124,34 @@ def solve_axes(
         p[2],   # inner_z
     ])
 
+def axis_nonorthogonality_deg(tips):
+    """Positive means the two rotary axes are less than 90 deg apart."""
+
+    oy, oz, ix, iz = tips
+
+    u = np.array([
+        1.0,
+        np.tan(np.radians(oy)),
+        np.tan(np.radians(oz)),
+    ])
+
+    v = np.array([
+        np.tan(np.radians(ix)),
+        1.0,
+        np.tan(np.radians(iz)),
+    ])
+
+    u /= np.linalg.norm(u)
+    v /= np.linalg.norm(v)
+
+    angle = np.degrees(
+        np.arccos(np.clip(np.dot(u, v), -1.0, 1.0))
+    )
+
+    return 90.0 - angle
+
+
+
 def  solve_skew(fit_angles, fit_meas, model_cls=Affine12, limit_deg=5.0):
 
     def cost(skew):
