@@ -1,0 +1,44 @@
+# Station settings. Re-read at the start of every run -- edit and press RUN.
+# Bad values revert to the default and print a warning at startup.
+
+[ports]
+stage_port = "COM3"      # Arduino motion controller
+dut_port   = "COM4"      # Teensy sensor hub
+dut_slot   = 0           # 0..7
+
+[poses]
+inner_limit_deg  = 120.0         # max |INNER|; hardware window is +/-145
+outer_window_deg = [0.0, 360.0]  # OUTER device window, used to price real slew
+order = "optimized"              # "optimized" = shortest travel | "designed"
+fit_pose_count = 26               # GUI default: 26 | 34 | 42 | 50
+
+[campaign]
+default_model      = "SQAC30"     # Affine12 | Bodega24 | BodegaR21 | SQAC30
+auto_level_default = true
+n_samples          = 25          # qualification window and final measurement size
+tp3_sample_period_s = 0.03       # minimum delay between fresh TP3 samples
+tp3_stability_sd_mg = 3.0        # every TP3 axis must be at or below this SD
+tp3_stability_timeout_s = 10.0   # qualification/final-window timeout per attempt
+tp3_max_attempts   = 3           # initial sweep plus deferred retry sweeps
+simultaneous_moves = true        # MOVEB drives both axes at once
+
+[motion]
+timeout_s         = 120          # mechanical timeout; a homing search is the slowest
+parking_angle_deg = 30           # park here so the NEG home search starts clean
+
+[leveling]
+tolerance_deg       = 0.002       # final 005 mean limit on both axes
+coarse_tol_g        = 0.0022      # DUT coarse-level target
+window_samples      = 10          # non-overlapping 005 samples per window
+stable_windows      = 2           # consecutive passing windows required
+sd_threshold_deg    = 0.001       # per-axis SD limit in every passing window
+drift_threshold_deg = 0.001       # max mean change between consecutive windows
+timeout_s           = 20.0        # stability timeout after each fine-level move
+sample_period_s     = 0.1         # target 005 sample spacing (approximately 10 Hz)
+
+[repeatability]
+runs = 6                 # campaigns the REPEATABILITY button runs
+
+[output]
+runs_dir = "runs"
+verbose  = false         # log every serial line to runs/debug_*.log

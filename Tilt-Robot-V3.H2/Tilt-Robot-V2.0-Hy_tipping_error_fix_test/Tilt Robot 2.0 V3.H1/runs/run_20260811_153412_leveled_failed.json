@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-08-11T15:34:16.735709",
+  "campaign_status": "SYSTEM_FAIL",
+  "failure_kind": "system",
+  "failure_reason": "ERR ENOAXIS outer not connected",
+  "model": "BodegaR21",
+  "requested_fit_pose_count": 26,
+  "poses": [],
+  "leveling": {
+    "enabled": true
+  },
+  "acquisition_settings": {
+    "qualification_samples": 25,
+    "measurement_samples": 25,
+    "tp3_sd_threshold_mg": 3.0,
+    "timeout_s": 10.0,
+    "max_attempts": 3,
+    "sample_period_s": 0.03
+  }
+}
