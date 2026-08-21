@@ -1,0 +1,83 @@
+# Station settings. Re-read at the start of every run -- edit and press RUN.
+# Bad values revert to the default and print a warning at startup.
+
+[ports]
+stage_port = "COM7"      # Arduino motion controller
+dut_port   = "COM6"      # Teensy sensor hub
+dut_slot   = 0           # 0..7
+
+[poses]
+inner_limit_deg  = 120.0         # max |INNER|; hardware window is +/-145
+outer_window_deg = [0.0, 360.0]  # OUTER device window, used to price real slew
+order = "optimized"              # "optimized" = shortest travel | "designed"
+fit_pose_count = 26               # GUI default: 26 | 34 | 42 | 50
+
+[campaign]
+default_model      = "SQAC24"     # Affine12 | Bodega24 | BodegaR21 | SQAC24 | SQAC30
+auto_level_default = true
+n_samples          = 25          # qualification window and final measurement size
+tp3_sample_period_s = 0.03       # minimum delay between fresh TP3 samples
+tp3_min_settle_s    = 0.5        # minimum wait after the stages report IDLE
+tp3_stable_windows  = 2          # consecutive non-overlapping qualification windows
+tp3_stability_sd_mg = 3.0        # every TP3 axis must be at or below this SD
+tp3_mean_drift_mg   = 1.0        # max per-axis mean change between stable windows
+tp3_stability_timeout_s = 10.0   # qualification/final-window timeout per attempt
+tp3_max_attempts   = 3           # initial sweep plus deferred retry sweeps
+simultaneous_moves = true        # MOVEB drives both axes at once
+
+[verification]
+# Inclusive final PASS/FAIL limits. Values are checked without rounding.
+rms_pitch_error_deg          = 0.2
+rms_roll_main_error_deg      = 0.2
+rms_roll_edge_error_deg      = 0.5
+max_abs_pitch_error_deg      = 3.0
+max_abs_roll_error_deg       = 3.0
+rms_x_acceleration_error_mg  = 2.0
+rms_y_acceleration_error_mg  = 2.0
+rms_z_acceleration_error_mg  = 2.5
+
+# Roll region classification uses the magnitude of reference pitch.
+# Main: abs(reference pitch) <= this value; edge: greater than this value.
+roll_main_max_abs_pitch_deg = 45.0
+
+[motion]
+timeout_s         = 120          # mechanical timeout; a homing search is the slowest
+
+[leveling]
+# Startup leveling is completely independent of the DUT accelerometer.  A
+# successful fine null is saved here and reused as the next run's search center.
+state_file             = "runs/last_level_null.json"
+initial_outer_null_deg = 0.0     # commissioning seed used only before a state file exists
+initial_inner_null_deg = 0.0
+
+# If the saved/initial seed is outside the 005 recovery band, search one stage
+# at a time from seed + radius to seed - radius.  The firmware performs this as
+# one bounded slow move; it is not a full revolution and cannot run away.
+recovery_sweep_radius_deg     = 10.0
+recovery_sweep_speed_deg_s    = 0.5
+recovery_detection_limit_deg  = 0.42
+recovery_detection_samples    = 3
+recovery_start_settle_s       = 1.0
+recovery_confirm_settle_s     = 1.5
+recovery_confirm_samples      = 3
+recovery_sample_period_s      = 0.1
+
+# If motion lag carries the table just past the range before it stops, search
+# only this small neighborhood with stopped moves, then resume fine nulling.
+recovery_local_step_deg       = 0.25
+recovery_local_radius_deg     = 1.0
+
+tolerance_deg       = 0.002       # final 005 mean limit on both axes
+window_samples      = 10          # non-overlapping 005 samples per window
+stable_windows      = 2           # consecutive passing windows required
+sd_threshold_deg    = 0.001       # per-axis SD limit in every passing window
+drift_threshold_deg = 0.001       # max mean change between consecutive windows
+timeout_s           = 20.0        # stability timeout after each fine-level move
+sample_period_s     = 0.1         # target 005 sample spacing (approximately 10 Hz)
+
+[repeatability]
+runs = 6                 # campaigns the REPEATABILITY button runs
+
+[output]
+runs_dir = "runs"
+verbose  = false         # log every serial line to runs/debug_*.log

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "saved_at": "2026-08-14T14:26:29",
+  "offsets_deg": {
+    "outer": -0.535,
+    "inner": -0.38
+  },
+  "tilt_mapping": {
+    "OUTER": "x",
+    "INNER": "y"
+  },
+  "gains_fine": {
+    "OUTER": -1.2476450699305062,
+    "INNER": -1.646469968387777
+  },
+  "signs": {
+    "OUTER": -1,
+    "INNER": -1
+  },
+  "final_tilt_deg": {
+    "x": -0.0006309999999999999,
+    "y": -0.000958
+  },
+  "motion_firmware": 6.0
+}

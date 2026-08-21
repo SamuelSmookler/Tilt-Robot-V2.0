@@ -1,0 +1,46 @@
+{
+  "timestamp": "2026-08-13T18:04:22.436201",
+  "campaign_status": "SYSTEM_FAIL",
+  "failure_kind": "system",
+  "failure_reason": "motion controller fault: home index found but a Zaber warning remains active",
+  "calibration_summary_title": "SQAC24 26-fit pose calibration",
+  "model": "SQAC24",
+  "requested_fit_pose_count": 26,
+  "poses": [],
+  "leveling": {
+    "enabled": true,
+    "method": "005_only_saved_null_bounded_sweep",
+    "dut_coarse_used": false,
+    "state_file": "C:\\Users\\pnisensor\\Downloads\\Tilt Robot 2.0 V3.H1\\PythonCode\\station_release\\runs\\last_level_null.json",
+    "seed_source": "configured commissioning seed",
+    "seed_null_deg": {
+      "outer": 0.0,
+      "inner": 0.0
+    }
+  },
+  "verification_settings": {
+    "thresholds": {
+      "rms_pitch_error_deg": 0.2,
+      "rms_roll_main_error_deg": 0.2,
+      "rms_roll_edge_error_deg": 0.5,
+      "max_abs_pitch_error_deg": 3.0,
+      "max_abs_roll_error_deg": 3.0,
+      "rms_x_acceleration_error_mg": 2.0,
+      "rms_y_acceleration_error_mg": 2.0,
+      "rms_z_acceleration_error_mg": 2.5
+    },
+    "roll_main_max_abs_pitch_deg": 45.0,
+    "roll_region_rule": "main when abs(reference pitch) <= boundary; edge otherwise"
+  },
+  "acquisition_settings": {
+    "qualification_samples": 25,
+    "qualification_windows": 2,
+    "measurement_samples": 25,
+    "minimum_post_idle_settle_s": 0.5,
+    "tp3_sd_threshold_mg": 3.0,
+    "mean_drift_threshold_mg": 1.0,
+    "timeout_s": 10.0,
+    "max_attempts": 3,
+    "sample_period_s": 0.03
+  }
+}
